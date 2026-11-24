@@ -1,0 +1,9 @@
+{
+ "format": 1,
+ "name": "zeta-and-l-functions-workbench",
+ "title": "Zeta and L-functions",
+ "scope": "Zeros, trace formulas, Artin L-functions, and what the Riemann hypothesis and its generalizations give, in arithmetic and in algorithms.",
+ "msc": "11M26; 11R42; 11Y16",
+ "index": "https://github.com/KokunoYumeto/mathematics-workbenches",
+ "licence": "CC0-1.0"
+}

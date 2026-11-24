@@ -1,0 +1,656 @@
+% Hexagon note, 24 Nov 2026. CC0 1.0.
+% Mathematics: GPT-6 Astra (ChatGPT Pro mode). Text, proofs as written here, and the enclosure program:
+% Claude Opus 5.5 at effort high (checker and writer).
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=2.7cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage[hidelinks]{hyperref}
+\emergencystretch=2em
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\ind}{ind}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\Hs}{\mathcal H}
+\newcommand{\workbenchurl}{https://github.com/KokunoYumeto/zeta-and-l-functions-workbench/tree/main/work/WB-0009/v1}
+\newcommand{\recordurl}{https://github.com/KokunoYumeto/mathematics-workbenches/blob/main/works/WB-0009.md}
+
+\title{A finite arithmetic test for simplicity of the Riemann zeros,\\ after Suzuki}
+\author{}
+\date{24 November 2026 \quad CC0 1.0}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+M.~Suzuki proved that, under the Riemann hypothesis, the compressions of the inverse of a self-adjoint
+differentiation operator to windows of Weil's quadratic form converge in Hilbert--Schmidt norm, and that their
+eigenvalues recover every distinct zero ordinate of the Riemann zeta function; he notes that the multiplicities are
+not recovered. The Riemann hypothesis is now a theorem of L.~Alp\"oge. We show that the multiplicities are recovered
+by even trace powers. Let $S_k=2\sum_{\gamma>0}m_\gamma\gamma^{-2k}$ be the Taylor moments of $\log\xi(1/2+iz)$,
+which count multiplicity, and let $D_{N,k}$ be $S_k$ minus the trace of the $2k$-th power of a finite compression
+whose matrix entries come from the explicit formula with finitely many prime powers. Then
+$D_{N,k}\ge 2E(T)/T^{2k}$, where $E(T)$ is the number of repeated zeros up to height $T$ counted with their excess
+multiplicity, and $\sup_{N,k}(2/D_{N,k})^{1/(2k)}$ equals the height of the first multiple zero. So the zeros up to a
+height $T$ are simple if and only if one finite arithmetic inequality holds, and all zeros are simple if and only if
+these heights are unbounded. An equivalent integer form counts the positive eigenvalues of one Hermitian matrix. A
+computation in ball arithmetic, with prime powers below $e^{12}$ and no zero ordinates as input, certifies that every
+zero with $0<\Im\rho\le 97.632$ is simple. The mathematics was produced by GPT-6 Astra (ChatGPT Pro mode); Claude
+Opus~5.5 at effort high checked every proof, wrote this text, and recomputed the certificate with an independently
+written program. No human has checked this note.
+\end{abstract}
+
+\section{The question and the theorem}
+
+\paragraph{The setting.}
+Let $\xi(s)=\frac12 s(s-1)\pi^{-s/2}\Gamma(s/2)\zeta(s)$ and $\Xi(z)=\xi(\tfrac12+iz)$. Alp\"oge's theorem
+\cite{alpoge,lean} gives the Riemann hypothesis: every zero of $\Xi$ is real. Let $\Gamma\subset\R$ be the set of
+distinct zeros of $\Xi$ and $m_\gamma$ the multiplicity of $\gamma\in\Gamma$. Since $\Xi$ is even and
+$\Xi(0)=\xi(1/2)\ne0$, $\Gamma=-\Gamma$, $m_{-\gamma}=m_\gamma$, $0\notin\Gamma$, and, because $\Xi$ has order one,
+$\sigma:=\sum_{\gamma\in\Gamma}m_\gamma\gamma^{-2}<\infty$ \cite[(2.2)]{suzuki}. Whether every $m_\gamma$ equals
+one is the simplicity question for the Riemann zeros. It is open. Write
+\[
+ E(T)=\sum_{0<\gamma\le T}(m_\gamma-1),\qquad
+ n(T)=\sum_{0<\gamma\le T}m_\gamma,\qquad
+ \gamma_*=\min\{\gamma>0:m_\gamma\ge2\}\in(0,\infty],
+\]
+the multiplicity excess up to height $T$, the counted number of zeros up to $T$, and the first multiple ordinate
+($\gamma_*=\infty$ if there is none).
+
+\paragraph{Suzuki's compressions.}
+Weil's quadratic form, $Q(u,v)=\sum_{\gamma\in\Gamma}m_\gamma\widehat u(\gamma)\overline{\widehat v(\gamma)}$ with
+$\widehat u(t)=\int u(x)e^{itx}\,dx$, is positive, and its completion is realized by the sampling map
+$u\mapsto(\widehat u(\gamma))_{\gamma\in\Gamma}$ in $\Hs=\ell^2(\Gamma,m)$, with norm
+$\|c\|^2=\sum_\gamma m_\gamma|c_\gamma|^2$. On $\Hs$, let $C$ be multiplication by $1/\gamma$. Suzuki
+\cite[§2.3 and (4.1)]{suzuki} shows that $C$ is a Hilbert--Schmidt operator with one eigenvector for each distinct
+ordinate, and that its compressions to the subspaces of test functions supported in $[-a,a]$ converge to $C$ in
+Hilbert--Schmidt norm; their positive eigenvalues decrease to $1/\gamma_1>1/\gamma_2>\cdots$ over the distinct
+ordinates \cite[Theorem~1.1]{suzuki}. He notes that ``the multiplicities of the zeros are not recovered''
+\cite[§1, after Theorem~1.2]{suzuki}.
+
+We use finite-dimensional windows. For $N\ge1$, let $h=2^{-N}$ and let $V_N$ be the space of continuous functions on
+$\R$, linear on each interval $[jh,(j+1)h]$, vanishing outside $(-N,N)$, with $\int f=0$. It has dimension
+$d_N=2N2^N-2$. Let $P_N$ be the orthogonal projection of $\Hs$ onto the image of $V_N$ under the sampling map, and
+$C_N=P_NCP_N$. For $k\ge1$ put
+\[
+ S_k=-2k\,[z^{2k}]\log\frac{\Xi(z)}{\Xi(0)}=2\sum_{\gamma>0}\frac{m_\gamma}{\gamma^{2k}},\qquad
+ D_{N,k}=S_k-\tr C_N^{2k},\qquad H_{N,k}=\Bigl(\frac2{D_{N,k}}\Bigr)^{1/(2k)} .
+\]
+The middle equality is the Hadamard product (Section~\ref{sec:proof1}). Both terms of $D_{N,k}$ are computable from
+arithmetic data: $S_k$ from the Taylor series of $\xi$ at $1/2$, and $\tr C_N^{2k}$ from two $d_N\times d_N$
+matrices whose entries are given by the explicit formula with the prime powers below $e^{2N}$
+(Section~\ref{sec:arith}).
+
+\begin{theorem}\label{thm:main}
+Assume the Riemann hypothesis (a theorem, \cite{alpoge}). For all $N,k\ge1$ and $T>0$,
+\[
+ D_{N,k}>2\sum_{\gamma>0}\frac{m_\gamma-1}{\gamma^{2k}}\ \ge\ \frac{2E(T)}{T^{2k}} .
+\]
+For fixed $k$, $D_{N,k}$ decreases in $N$ to $2\sum_{\gamma>0}(m_\gamma-1)\gamma^{-2k}$, and
+\[
+ \sup_{N,k\ge1}H_{N,k}=\gamma_* .
+\]
+Consequently, for each $T>0$, every zero with $0<\Im\rho\le T$ is simple if and only if $D_{N,k}<2/T^{2k}$ for some
+$N,k\ge1$; and every nontrivial zero of $\zeta$ is simple if and only if $\sup_{N,k}H_{N,k}=\infty$.
+\end{theorem}
+
+The test has an integer form. Let $b_j=t_j-t_0$ ($0<|j|<N2^N$), where $t_j$ is the hat function of height one centred
+at $jh$ with support $[(j-1)h,(j+1)h]$. These $b_j$ form a basis of $V_N$: each has mean zero, since every $t_j$
+has integral $h$; they are linearly independent, since $\sum_jc_jb_j$ takes the value $c_j$ at $jh$; and a function
+$f\in V_N$ equals $\sum_{|j|<N2^N}f(jh)t_j$ with $\sum_jf(jh)=h^{-1}\int f=0$, hence equals $\sum_{j\ne0}f(jh)b_j$
+(this argument is that of the independent re-proof acknowledged in the note on method). Let $G_N$ and $H_N$ be the Hermitian
+matrices $(G_N)_{ij}=Q(b_j,b_i)$ and $(H_N)_{ij}=\langle C\,\widehat b_j,\widehat b_i\rangle_{\Hs}$, where
+$\widehat b$ denotes the sampling vector, and let $\ind_+$ denote the number of positive eigenvalues.
+
+\begin{theorem}\label{thm:integer}
+Assume the Riemann hypothesis. Let $T>0$ with $\Xi(T)\ne0$, and $\iota_N(T)=\ind_+(TH_N-G_N)$. Then $\iota_N(T)$ is
+nondecreasing in $N$, at most the number of distinct ordinates in $(0,T]$, and equal to it for all large $N$. Hence
+the zeros with $0<\Im\rho\le T$ are all simple if and only if $\iota_N(T)\ge n(T)$ for some $N$.
+\end{theorem}
+
+\begin{theorem}\label{thm:cert}
+Every zero $\rho$ of $\zeta$ with $0<\Im\rho\le 97.632$ is simple. More precisely, $D_{6,3}<2/(97.632)^6$, and the
+five rows of Table~\ref{tab:cert} with $N\le5$ satisfy the strict test at the heights shown.
+\end{theorem}
+
+The certificate uses $15040$ prime powers, the largest $162751<e^{12}$, and the matrices have dimension $766$. It
+was computed twice, by two independently written programs in Arb ball arithmetic (Section~\ref{sec:cert}).
+
+\begin{proposition}\label{prop:const}
+Every zero with ordinate $\gamma\ge10$ has multiplicity $m_\gamma<\frac34\log\gamma$. The first multiple ordinate
+satisfies $\gamma_*>97.632$, so $\gamma_*^2/2>4766.003712$, and every multiple zero has
+$\gamma>\max(97.632,\,e^{4m_\gamma/3})$.
+\end{proposition}
+
+\paragraph{What this means.}
+Theorem~\ref{thm:main} turns the simplicity question into a statement about finitely many prime powers at a time: the
+multiplicity excess is exactly what separates the moments $S_k$, which see each zero with its multiplicity, from the
+traces of Suzuki's compressions, which see each distinct zero once. At every fixed height the test terminates exactly
+when the zeros there are simple. Simplicity of all zeros is the statement that these finite arithmetic tests succeed
+at every height; the theorem gives no estimate that would decide it. The limit of the defect is the Taylor data of
+$\log(\Xi(z)/(\Xi(0)\mathsf P(z)))$, where $\mathsf P(z)=\prod_{\gamma>0}(1-z^2/\gamma^2)$ is Suzuki's product over
+distinct ordinates \cite[Theorem~1.2]{suzuki}; that quotient is constant exactly when all zeros are simple.
+
+\paragraph{Why it matters.}
+Simplicity of the zeros is the next question about their location after the Riemann hypothesis. It enters the
+explicit formula with multiplicities, the size of $1/\zeta'(\rho)$, and the spectral interpretations of the zeros:
+a self-adjoint operator whose spectrum is the set of zeros sees each one with the multiplicity of its eigenspace. Here
+the comparison between the counted and the distinct zeros becomes a positive defect of explicit finite matrices, and
+the defect is computable from primes.
+
+\paragraph{The credit.}
+The Hilbert space, the operator $C$, its Hilbert--Schmidt property, and the convergence of compressions are
+Suzuki's \cite[§2.3, (4.1), Theorem~3.3]{suzuki}; we apply his argument to the dyadic windows $V_N$, for which we
+prove the density it needs (Lemma~\ref{lem:dense}). The explicit formula is Weil's, in Bombieri's normalization as
+recorded by Connes and Consani \cite[Appendix, Explicit formula]{cc-weil}. Alp\"oge's theorem \cite{alpoge}
+supplies the real zeros. The principle that a finite restriction of Weil's form sees distinct zeros through its
+rank or positive index and counted zeros through its trace is Alp\"oge and Furman's \cite[Proposition~4.1,
+p.~6]{alpoge-furman}, and the pull-back of inertia used in Theorem~\ref{thm:integer} is their
+\cite[Lemma~3.1, p.~5]{alpoge-furman}. What is new here is the exact form of that comparison for Suzuki's
+compressions: the trace-power defect and its supremum (Theorem~\ref{thm:main}), the equality of the positive index
+with the number of distinct ordinates at each height (Theorem~\ref{thm:integer}), the certificate
+(Theorem~\ref{thm:cert}), Propositions~\ref{prop:const} and~\ref{prop:size}, and the heat-flow limit of
+Proposition~\ref{prop:heat}, whose proof uses the stability criterion of Borcea and Br\"and\'en \cite{bb}.
+
+\paragraph{Context.}
+Alp\"oge and Furman \cite{alpoge-furman} proved, unconditionally, that more than two thirds of the zeros are simple
+and on the critical line and more than five sixths are distinct \cite[Theorem~A, p.~1]{alpoge-furman}. They
+restrict Weil's form to about $N(T,2T)$ modulated copies of one window placed through $[T,2T]$; in the resulting
+matrix each distinct zero on the line contributes a positive form of rank one with trace equal to its multiplicity,
+and each pair of zeros off the line a block of signature $(1,1)$ \cite[Proposition~4.1, p.~6]{alpoge-furman}, the
+latter observation being Bombieri's \cite[§1.3, p.~3]{alpoge-furman}. A rank--trace inequality \cite[Lemma~3.2,
+p.~5]{alpoge-furman} and Montgomery's second moment then give the proportions \cite[§1.2, (1.2),
+p.~2]{alpoge-furman}. Their matrices are not compressions of an operator with the zeros as spectrum, no trace powers
+enter, and their bounds are inequalities for proportions; nothing there states an exact count at a fixed height or
+the defect of Theorem~\ref{thm:main}. Lamzouri \cite{lamzouri} gave a second proof of the same proportions with a
+single Hilbert-space inequality. Mori \cite{mori} bounds the smallest
+eigenvalue of the windowed Weil form from below under the Riemann hypothesis alone, and shows that such bounds force a
+proportion of distinct zeros; our defect controls the multiplicity excess itself, not a proportion. Groskin
+\cite{groskin} studies finite Galerkin truncations of the Weil form and Kim et al.\ \cite{kim} compute Suzuki's
+operator numerically; neither treats multiplicities. On Hexagon, C\'aceres \cite{caceres} states, in the abstract
+of his Part~IV, an averaged criterion: the mean energy of the prime-counting error is at least $2B$
+unconditionally, with equality if and only if the Riemann hypothesis holds with simple zeros; the test here is
+exact at each fixed height, with a certificate, and we have read only that abstract. Numerical verifications of the Riemann hypothesis reach far
+greater heights \cite{platt-trudgian}; the certificate here is small, and its interest is that it uses no zero
+ordinates.
+
+\paragraph{Scope.}
+Theorems~\ref{thm:main} and \ref{thm:integer} are exact equivalences; they give no estimate of $D_{N,k}$ at large
+height, so they do not decide whether all zeros are simple. Theorem~\ref{thm:cert} is a finite computation; its
+rigour is that of ball arithmetic and of the programs (Section~\ref{sec:cert}), and it is not formally verified.
+
+\section{Proof overview}
+
+The difficulty is to see multiplicity through an operator that cannot see it. In $\Hs=\ell^2(\Gamma,m)$, the operator
+$C$ has the single eigenvalue $1/\gamma$ on the coordinate of $\gamma$, whatever $m_\gamma$ is; the weight $m_\gamma$
+only scales the norm. So $\tr C^{2k}=2\sum_{\gamma>0}\gamma^{-2k}$, while the Taylor moments $S_k$ of $\log\Xi$
+carry the weights $m_\gamma$. Their difference is $2\sum(m_\gamma-1)\gamma^{-2k}\ge0$, which vanishes exactly when
+all zeros are simple. The problem is that neither $\Hs$ nor $C$ is finite.
+
+Suzuki's compressions supply the finite objects. Compression to a subspace lowers every singular value, so the finite
+defect $D_{N,k}$ is at least the infinite one; nested subspaces make it decrease; and Hilbert--Schmidt convergence,
+which holds for any increasing family of subspaces with dense union, makes it converge. Raising $k$ isolates the
+largest entry of the sequence $(1/\gamma)$ repeated $m_\gamma-1$ times, which is $1/\gamma_*$. The integer form
+counts the eigenvalues of $C_N$ above $1/T$ by Sylvester's law of inertia.
+
+The arithmetic enters only through the matrix entries. For compactly supported test functions the sampling inner
+product equals the arithmetic side of the explicit formula, which involves the prime powers below $e^{2N}$ and two
+archimedean integrals; the primitive $-i\int f$ realizes $C$ on mean-zero functions. Alp\"oge's theorem is used in one
+place: it makes $\Gamma$ real, so that $Q$ is the positive form $\sum m_\gamma|\widehat u(\gamma)|^2$ and $C$ is
+self-adjoint. The density of the dyadic windows, which Suzuki's argument needs, is proved directly in
+Lemma~\ref{lem:dense}.
+
+\section{The Hilbert space, the windows and the operator}\label{sec:space}
+
+Throughout, the Riemann hypothesis holds, and $\widehat u(t)=\int_\R u(x)e^{itx}dx$. For $u\in L^2(\R)$ with compact
+support, $\widehat u$ is entire, and the sampling vector is $Su=(\widehat u(\gamma))_{\gamma\in\Gamma}$.
+
+\begin{lemma}[Sampling bound]\label{lem:sample}
+If $u\in H^1(\R)$ is supported in $[-a,a]$, then $|\widehat u(t)|\le\|u'\|_{L^1}/|t|$ for $t\ne0$, and
+$\|Su\|_\Hs^2\le 2a\,\sigma\,\|u'\|_{L^2}^2$.
+\end{lemma}
+\begin{proof}
+Integration by parts gives $\widehat{u'}(t)=-it\,\widehat u(t)$, so $|t\widehat u(t)|\le\|u'\|_{L^1}\le
+\sqrt{2a}\,\|u'\|_{L^2}$. Summing $m_\gamma|\widehat u(\gamma)|^2\le m_\gamma\gamma^{-2}\cdot2a\|u'\|_2^2$ over
+$\Gamma$ gives the second bound.
+\end{proof}
+
+\begin{lemma}[Density of the windows]\label{lem:dense}
+$V_N\subset V_{N+1}$, and $\bigcup_NSV_N$ is dense in $\Hs$.
+\end{lemma}
+\begin{proof}
+A function linear on the cells of $2^{-N}\mathbb Z$ is linear on the cells of $2^{-N-1}\mathbb Z$, and $(-N,N)\subset
+(-N-1,N+1)$; so $V_N\subset V_{N+1}$.
+
+\emph{Test functions are dense.} Let $c\in\Hs$ be orthogonal to $SC_c^\infty(\R)$. The measure
+$\tau=\sum_\gamma m_\gamma\overline{c_\gamma}\,\delta_\gamma$ is tempered, since $\sum_\gamma
+m_\gamma|c_\gamma|(1+\gamma^2)^{-1}\le\|c\|\sigma^{1/2}<\infty$, and $\tau(\widehat u)=0$ for all $u\in
+C_c^\infty(\R)$. The Fourier transform is an automorphism of the Schwartz space $\mathcal S$ and $C_c^\infty$ is dense
+in $\mathcal S$, so $\widehat{C_c^\infty}$ is dense in $\mathcal S$. Hence $\tau=0$, and $c=0$.
+
+\emph{The mean can be removed.} Let $\psi\in C_c^\infty(\R)$ with $\int\psi=1$ and $\psi_R(x)=R^{-1}\psi(x/R)$.
+Then $\widehat{\psi_R}(t)=\widehat\psi(Rt)$, $|\widehat\psi(t)|\le c_\psi t^{-2}$, and
+$\|S\psi_R\|^2=\sum m_\gamma|\widehat\psi(R\gamma)|^2\to0$ as $R\to\infty$ by dominated convergence (each term
+tends to $0$ and is at most $c_\psi^2m_\gamma\gamma^{-4}$ for $R\ge1$, which is summable). For $u\in C_c^\infty$,
+$u-(\int u)\psi_R$ has mean zero and its sampling vector tends to $Su$.
+
+\emph{Mean-zero test functions are limits of $V_N$.} Let $v\in C_c^\infty$ have mean zero and support in $[-a,a]$, and
+let $N\ge a+1$, $h=2^{-N}$. Let $I_Nv$ be the continuous function, linear on the cells of $h\mathbb Z$, that agrees
+with $v$ at $h\mathbb Z$. On each cell, $(v-I_Nv)'$ has mean zero, so Wirtinger's inequality gives
+$\|(v-I_Nv)'\|_{L^2}\le (h/\pi)\|v''\|_{L^2}$; and, since $I_Nv-v$ vanishes outside $[-a-h,a+h]$,
+$|\int I_Nv|=|\int(I_Nv-v)|\le (2a+2h)\,h^2\|v''\|_\infty/12$ by the trapezoid rule. Put $v_N=I_Nv-h^{-1}(\int I_Nv)\,t_0\in V_N$, where $t_0$ is the hat at $0$, of integral $h$ and
+with $\|t_0'\|_2^2=2/h$. By Lemma~\ref{lem:sample} with support in $[-a-1,a+1]$,
+\[
+ \|S(v-v_N)\|\le\sqrt{2(a+1)\sigma}\,\Bigl(\frac h\pi\|v''\|_2+\frac{(2a+2h)h\|v''\|_\infty}{12}\sqrt{2/h}\Bigr)
+ \longrightarrow0 .
+\]
+The three steps give the density.
+\end{proof}
+
+On $\Hs$ let $(Cc)_\gamma=c_\gamma/\gamma$. The vectors $e_\gamma=m_\gamma^{-1/2}\mathbf 1_{\{\gamma\}}$ form an
+orthonormal basis and $Ce_\gamma=\gamma^{-1}e_\gamma$, so $C$ is bounded and self-adjoint, with
+$\|C\|_{S_2}^2=\sum_{\gamma\in\Gamma}\gamma^{-2}\le\sigma$ (as in \cite[§2.3]{suzuki}), and, for $k\ge1$,
+\[
+ \tr|C|^{2k}=\sum_{\gamma\in\Gamma}\gamma^{-2k}=2\sum_{\gamma>0}\gamma^{-2k}.
+\]
+Its eigenvalues are $\pm1/\gamma$, one for each distinct ordinate.
+
+\begin{lemma}[The primitive]\label{lem:prim}
+For $f\in V_N$, let $F(x)=-i\int_{-\infty}^xf(y)\,dy$. Then $F\in H^1(\R)$ is supported in $[-N,N]$ and $SF=CSf$.
+\end{lemma}
+\begin{proof}
+$F$ vanishes outside $[-N,N]$ because $\int f=0$. From $F'=-if$ and $\widehat{F'}(t)=-it\widehat F(t)$ we get
+$\widehat F(t)=\widehat f(t)/t$ for $t\ne0$.
+\end{proof}
+
+\section{Proof of Theorems \ref{thm:main} and \ref{thm:integer}}\label{sec:proof1}
+
+\paragraph{The moments.}
+$\Xi$ is even, entire of order one, with $\Xi(0)\ne0$ and $\sum m_\gamma\gamma^{-2}<\infty$; its Hadamard product,
+paired over $\pm\gamma$, is $\Xi(z)=\Xi(0)\prod_{\gamma>0}(1-z^2/\gamma^2)^{m_\gamma}$ (the exponential factors cancel
+in pairs and the remaining factor $e^{bz}$ is $1$ by evenness). For $|z|<\min_{\gamma>0}\gamma$,
+$\log(\Xi(z)/\Xi(0))=-\sum_{\gamma>0}m_\gamma\sum_{j\ge1}z^{2j}/(j\gamma^{2j})$, which gives
+$S_k=2\sum_{\gamma>0}m_\gamma\gamma^{-2k}$.
+
+\paragraph{The lower bound.}
+Write $s_1\ge s_2\ge\cdots$ for singular values. Since $\|P_N\|\le1$, $s_j(P_NCP_N)\le s_j(C)$ for every $j$. The
+operator $C_N$ is self-adjoint of finite rank $r$, so
+$\tr C_N^{2k}=\sum_{j\le r}s_j(C_N)^{2k}\le\sum_{j\le r}s_j(C)^{2k}<\tr|C|^{2k}$, the last inequality being strict
+because $C$ has infinitely many nonzero singular values. Hence
+\[
+ D_{N,k}>S_k-\tr|C|^{2k}=2\sum_{\gamma>0}\frac{m_\gamma-1}{\gamma^{2k}}\ge\frac{2E(T)}{T^{2k}},
+\]
+the last step keeping only the ordinates $\gamma\le T$, for which $\gamma^{-2k}\ge T^{-2k}$.
+
+\paragraph{Monotonicity and the limit.}
+The subspaces $SV_N$ increase with $N$ (Lemma~\ref{lem:dense}). By the max--min principle, the $n$-th largest
+positive eigenvalue of the compression of $C$ to a subspace does not decrease when the subspace grows; applied to $-C$,
+the same holds for the absolute values of the negative eigenvalues. So $\tr C_N^{2k}$ is nondecreasing in $N$ and
+$D_{N,k}$ is nonincreasing. Since the union of the subspaces is dense, $P_N\to I$ strongly. Following
+\cite[(4.1)]{suzuki}: $C-P_NCP_N=(I-P_N)C+P_NC(I-P_N)$, and $\|P_NC(I-P_N)\|_{S_2}\le\|(I-P_N)C\|_{S_2}$ by taking
+adjoints; and $\|(I-P_N)C\|_{S_2}^2=\sum_\gamma\gamma^{-2}\|(I-P_N)e_\gamma\|^2\to0$ by dominated convergence. So
+$C_N\to C$ in Hilbert--Schmidt norm. For $k\ge1$,
+\[
+ C^{2k}-C_N^{2k}=\sum_{j=0}^{2k-1}C^{\,j}(C-C_N)C_N^{\,2k-1-j},
+\]
+and each summand has a factor $C$ or $C_N$ besides $C-C_N$; with $\|UV\|_{S_1}\le\|U\|_{S_2}\|V\|_{S_2}$ and bounded
+operator norms, $C_N^{2k}\to C^{2k}$ in trace norm. Hence $D_{N,k}\to S_k-\tr C^{2k}=2\sum(m_\gamma-1)\gamma^{-2k}$.
+
+\paragraph{The supremum.}
+Let $v$ be the sequence of the numbers $1/\gamma$, $\gamma>0$, each repeated $m_\gamma-1$ times; it lies in
+$\ell^2$, and $\lim_ND_{N,k}=2\|v\|_{2k}^{2k}$. By monotonicity, $\sup_NH_{N,k}=\|v\|_{2k}^{-1}$ (infinite if $v$ is
+empty). If $v$ is not empty, its largest entry is $1/\gamma_*$, and
+$\gamma_*^{-2k}\le\sum_jv_j^{2k}\le\gamma_*^{-(2k-2)}\sum_jv_j^2$; taking $2k$-th roots, $\|v\|_{2k}\ge1/\gamma_*$ for
+every $k$ and $\|v\|_{2k}\to1/\gamma_*$. So $\sup_{N,k}H_{N,k}=\gamma_*$.
+
+\paragraph{The equivalences.}
+If $D_{N,k}<2/T^{2k}$, then $E(T)<1$, so $E(T)=0$. Conversely, if $E(T)=0$, then $\gamma_*>T$ (the multiple
+ordinates are discrete), and the supremum gives $N,k$ with $H_{N,k}>T$, that is $D_{N,k}<2/T^{2k}$. All zeros are
+simple if and only if $\gamma_*=\infty$. This proves Theorem~\ref{thm:main}.
+
+\paragraph{The integer form.}
+For $f=\sum_jc_jb_j\in V_N$, $c^*G_Nc=\|Sf\|^2$ and $c^*H_Nc=\langle CSf,Sf\rangle$. The Hermitian form
+$c\mapsto c^*(TH_N-G_N)c$ is therefore the pull-back, under the surjection $c\mapsto Sf$ onto $SV_N$, of the form
+$x\mapsto\langle(TC_N-I)x,x\rangle$ on $SV_N$. This holds whether or not $G_N$ is invertible: if the map
+$c\mapsto Sf$ has a kernel, the form on coefficients vanishes on that kernel, and a subspace on which it is positive
+definite meets the kernel only in $0$ and is mapped injectively onto a positive subspace of $SV_N$; conversely a
+positive subspace of $SV_N$ lifts to one of the same dimension. So the pull-back has the same positive index. Thus
+$\iota_N(T)$ is the number of eigenvalues of $C_N$ on $SV_N$ greater than $1/T$. By max--min these are at most the
+eigenvalues of $C$ greater than $1/T$, which are the $1/\gamma$ with $0<\gamma<T$, one per distinct ordinate, and
+they do not decrease with $N$. Since $\Xi(T)\ne0$, no eigenvalue of $C$ equals $1/T$; operator-norm convergence
+$C_N\to C$ then puts each of the finitely many eigenvalues of $C$ above $1/T$ within reach for large $N$, so
+$\iota_N(T)$ eventually equals the number of distinct ordinates in $(0,T]$. That number equals $n(T)$ exactly when
+those zeros are simple. This proves Theorem~\ref{thm:integer}.
+
+\begin{proposition}[Size of a certificate]\label{prop:size}
+Let $\gamma_1\le\gamma_2\le\cdots$ be the positive ordinates listed with multiplicity. Then
+$D_{N,k}\ge2\sum_{j>d_N/2}\gamma_j^{-2k}$. Hence $D_{N,k}<2/T^{2k}$ requires $d_N\ge2n(T)$.
+\end{proposition}
+\begin{proof}
+$\tr C_N^{2k}$ is at most the sum of the $d_N$ largest values of $s_j(C)^{2k}$. These values are $\gamma^{-2k}$, each
+distinct $\gamma\in\Gamma$ once, and they are dominated term by term by the list $\pm\gamma_j$ with multiplicity, whose
+$d_N$ largest values sum to $2\sum_{j\le d_N/2}\gamma_j^{-2k}$. Subtracting from $S_k$ gives the bound. If
+$n(T)>d_N/2$, the term $j=n(T)$ alone contributes at least $2T^{-2k}$.
+\end{proof}
+
+\section{The arithmetic evaluation}\label{sec:arith}
+
+\paragraph{The explicit formula.}
+For $h\in C_c^\infty(\R)$ define
+\begin{align*}
+ W(h)={}&\int_\R h(x)\bigl(e^{x/2}+e^{-x/2}\bigr)dx-(\log\pi+\gamma_E)\,h(0)\\
+ &+\int_0^\infty\frac{2e^{-2x}h(0)-e^{-x/2}\bigl(h(x)+h(-x)\bigr)}{1-e^{-2x}}\,dx\\
+ &-\sum_{n\ge2}\frac{\Lambda(n)}{\sqrt n}\bigl(h(\log n)+h(-\log n)\bigr).
+\end{align*}
+
+\begin{lemma}\label{lem:EF}
+If $u,v\in H^1(\R)$ have compact support and $h=u*\widetilde v$, $\widetilde v(x)=\overline{v(-x)}$, then
+$\langle Su,Sv\rangle_\Hs=W(h)$. Only the prime powers $n$ with $\log n$ in the support of $h$ contribute.
+\end{lemma}
+\begin{proof}
+For $f\in C_c^\infty(0,\infty)$, the explicit formula in Bombieri's form \cite[Appendix ``Explicit formula'', its first three displayed formulas]{cc-weil} reads
+$\sum_\rho\widetilde f(\rho)=\int_0^\infty f+\int_0^\infty f^\sharp-\mathcal W_\R(f)-\sum_p\mathcal W_p(f)$, with
+$\widetilde f(s)=\int_0^\infty f(x)x^{s-1}dx$, $f^\sharp(x)=x^{-1}f(x^{-1})$,
+$\mathcal W_p(f)=\log p\sum_{m\ge1}(f(p^m)+f^\sharp(p^m))$ and
+$\mathcal W_\R(f)=(\log4\pi+\gamma_E)f(1)+\int_1^\infty(f(x)+f^\sharp(x)-2x^{-1}f(1))\,dx/(x-x^{-1})$. Take $u,v\in
+C_c^\infty$ and $f(e^y)=e^{-y/2}h(y)$. For $\rho=\frac12+i\gamma$, $\widetilde f(\rho)=\widehat h(\gamma)=\widehat
+u(\gamma)\overline{\widehat v(\gamma)}$, so the left side is $\langle Su,Sv\rangle$, an absolutely convergent sum by
+Lemma~\ref{lem:sample}. With $x=e^y$: $\int f+\int f^\sharp=\int h(y)(e^{y/2}+e^{-y/2})dy$; $f(e^y)+f^\sharp(e^y)=
+e^{-y/2}(h(y)+h(-y))$; $dx/(x-x^{-1})=dy/(1-e^{-2y})$; and $\sum_p\mathcal W_p(f)=\sum_n\Lambda(n)n^{-1/2}(h(\log
+n)+h(-\log n))$. This gives $W(h)$ with the constant $-(\log4\pi+\gamma_E)$ and $2e^{-y}h(0)$ in the numerator; since
+$\int_0^\infty2(e^{-2y}-e^{-y})(1-e^{-2y})^{-1}dy=-\log4$ (substitute $w=e^{-y}$), it equals $W(h)$ as written.
+
+For $u,v\in H^1$ with support in $[-a,a]$, choose $u_n,v_n\in C_c^\infty$ with support in $[-a-1,a+1]$ converging to
+$u,v$ in $H^1$. The left sides converge by Lemma~\ref{lem:sample}. The functions $h_n=u_n*\widetilde v_n$ and
+$h_n'=u_n'*\widetilde v_n$ converge uniformly to $h$ and $h'$, with supports in a fixed interval. Each term of $W$ is
+continuous for this convergence: the first two and the finite prime sum obviously; in the third, on $(0,1]$ the
+numerator is at most $c\,x(\|h\|_\infty+\|h'\|_\infty)$ and $1-e^{-2x}\ge(1-e^{-2})x$, and on $[1,\infty)$ the
+integrand is at most $c\,e^{-x/2}\|h\|_\infty$.
+\end{proof}
+
+\paragraph{The matrices.}
+Let $b=t_0*t_0$, the correlation of the central hat:
+\[
+ b(x)=\begin{cases}2h/3-x^2/h+|x|^3/(2h^2),&|x|\le h,\\ (2h-|x|)^3/(6h^2),&h\le|x|\le2h,\\ 0,&|x|\ge2h,\end{cases}
+\]
+and $A_d(x)=\int_0^db(x-u)\,du$. Put $g(d)=W(b(\cdot-d))$, which is even in $d$, and $a(d)=W(A_d)$, which is odd
+(because $W(\phi(-\,\cdot))=W(\phi)$ and $A_{-d}(x)=-A_d(-x)$). Since $t_j*\widetilde t_i=b(\cdot-(j-i)h)$,
+Lemma~\ref{lem:EF} gives
+\[
+ (G_N)_{ij}=g((j-i)h)-g(jh)-g(ih)+g(0).
+\]
+For $H_N$, Lemma~\ref{lem:prim} gives $CSb_j=SF_j$ with $F_j=-i\int_{-\infty}^x(t_j-t_0)=i\int_0^{jh}t_0(\cdot-u)\,du$.
+Then $F_j*\widetilde t_i=iA_{jh}(\cdot+ih)$, and $A_d(\cdot+c)=A_{d-c}-A_{-c}$, so Lemma~\ref{lem:EF} gives
+\[
+ (H_N)_{ij}=i\,B_{ij},\qquad B_{ij}=a((j-i)h)-a(jh)+a(ih),
+\]
+with $B$ real antisymmetric. If $G_N$ is invertible, the matrix of $C_N$ on $SV_N$ in the basis $Sb_j$ is
+$G_N^{-1}H_N$, and
+\[
+ \tr C_N^{2k}=(-1)^k\tr\bigl((G_N^{-1}B)^{2k}\bigr).
+\]
+Every test function here is supported in $[-2N,2N]$, so only the prime powers $n<e^{2N}$ enter. In the computation,
+$A_{mh}=\sum_{0\le j<m}\beta(\cdot-jh)$ with $\beta(x)=\int_0^hb(x-u)\,du$, so that each functional is evaluated on
+a piecewise polynomial supported on five cells.
+
+\section{The certificate}\label{sec:cert}
+
+Table~\ref{tab:cert} gives, for six windows, an enclosure of $D_{N,k}$ and the threshold $2/T^{2k}$. Each row
+satisfies the strict test $D_{N,k}<2/T^{2k}$, so by Theorem~\ref{thm:main} every zero with $0<\Im\rho\le T$ is simple;
+the last row is Theorem~\ref{thm:cert}. Each height is $H_{N,k}$ rounded down, and $d_N\ge2n(T)$ as
+Proposition~\ref{prop:size} requires ($n(97.632)=28$).
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}rrrrrll@{}}
+\toprule
+$N$&$d_N$&prime powers&$k$&$T$&$D_{N,k}$ (enclosure)&$2/T^{2k}$\\\midrule
+1&2&5&9&14.134&$3.94653014372982665\ldots\cdot10^{-21}$&$3.9469209\ldots\cdot10^{-21}$\\
+2&14&24&3&20.704&$2.53910511009839593\ldots\cdot10^{-8}$&$2.5392440\ldots\cdot10^{-8}$\\
+3&46&98&3&26.782&$5.41964807266176611\ldots\cdot10^{-9}$&$5.4196589\ldots\cdot10^{-9}$\\
+4&126&465&2&39.913&$7.88033023780063053\ldots\cdot10^{-7}$&$7.8808399\ldots\cdot10^{-7}$\\
+5&318&2532&2&62.413&$1.31802357404210376\ldots\cdot10^{-7}$&$1.3180435\ldots\cdot10^{-7}$\\
+6&766&15040&3&97.632&$2.30927091609723675\ldots\cdot10^{-12}$&$2.3092815\ldots\cdot10^{-12}$\\\bottomrule
+\end{tabular}
+\caption{Strict height certificates. The enclosure radii are below $10^{-26}$ in every row; the digits shown are
+inside the enclosure.}\label{tab:cert}
+\end{table}
+
+\paragraph{How the enclosures were computed.}
+All quantities are evaluated in Arb ball arithmetic \cite{arb}, which returns for each real number an interval
+guaranteed to contain it. (i) The functionals $g(d)$ and $a(d)$: on each cell of $h\mathbb Z$ the test function is a
+polynomial of degree at most four, recovered exactly by interpolation; the first, third and archimedean integrals are
+evaluated by rigorous ball-arithmetic integration \cite{arb-int}, the integrand on $[0,h]$ being written as
+$\bigl(-3h(0)e^{-x/2}\varphi(-3x/2)-e^{-x/2}\psi_1(x)\bigr)/\bigl(2\varphi(-2x)\bigr)$ with $\varphi(z)=(e^z-1)/z$
+and $h(x)+h(-x)=2h(0)+x\psi_1(x)$, which removes the singularity at $0$; the tail $\int_h^\infty
+2e^{-2x}(1-e^{-2x})^{-1}dx=-\log(1-e^{-2h})$ is exact; the prime sum is finite. (ii) $G_N$ and $B$ are assembled
+from these balls; a rigorous linear solve certifies that $G_N$ is invertible (so it is positive definite, being a
+Gram matrix) and encloses $G_N^{-1}B$; the trace of its $2k$-th power is enclosed. (iii) $S_k$ is the coefficient of
+$z^{2k}$ in the power series of $\log(s(s-1)/2)-\tfrac s2\log\pi+\log\Gamma(s/2)+\log\zeta(s)$ at $s=\frac12+iz$,
+computed in ball arithmetic. No zero of $\zeta$ is used.
+
+The computation was done twice, by two independently written programs: once by the producer of the mathematics,
+at 120 digits with a preconditioned positive-definiteness test, and once for this note, at 150 digits, by the program
+on the workbench \cite{wb}. The enclosures agree. The rigour of the certificate is that of ball arithmetic and of
+these programs; it is not formally verified.
+
+\section{Explicit constants}
+
+\begin{proof}[Proof of Proposition~\ref{prop:const}]
+Let $\gamma\ge10$ be an ordinate of multiplicity $m$ and $s=2+i\gamma$. Pairing the Hadamard product of $\xi$,
+$\Re\frac{\xi'}{\xi}(s)=\sum_\rho\Re\frac1{s-\rho}$, and every term is positive because $\Re\rho=\frac12$; the $m$
+terms with $\rho=\frac12+i\gamma$ give $m/(3/2)$. So $\frac{2m}3\le\Re\frac{\xi'}{\xi}(2+i\gamma)$. Now
+$\frac{\xi'}{\xi}(s)=\frac1s+\frac1{s-1}-\frac12\log\pi+\frac12\frac{\Gamma'}{\Gamma}(\frac s2)+\frac{\zeta'}{\zeta}(s)$.
+Here $\Re(\frac1s+\frac1{s-1})<3/\gamma^2$; $|\frac{\zeta'}{\zeta}(s)|\le\sum\Lambda(n)n^{-2}<0.57687<\frac35$
+(summing the prime powers up to $1000$ and bounding the rest by $\int_{1000}^\infty(\log x)x^{-2}dx=
+(\log1000+1)/1000$); and with $y=\gamma/2$, $\Re\frac{\Gamma'}{\Gamma}(1+iy)=-\gamma_E+\sum_{n\ge1}\frac{y^2}{n(n^2+y^2)}
+\le-\gamma_E+\frac{y^2}{1+y^2}+\frac12\log(1+y^2)$, comparing the decreasing summand with its integral. Collecting,
+\[
+ \Re\frac{\xi'}{\xi}(2+i\gamma)<\frac12\log\gamma+\frac4{\gamma^2}+\frac{11}{10}-\frac12(\gamma_E+\log2\pi)
+ <\frac12\log\gamma+\frac1{25}-\frac1{20}<\frac12\log\gamma,
+\]
+using $\frac14\log(1+4/\gamma^2)<1/\gamma^2$, $\gamma_E>\sum_{j\le6}j^{-1}-\log7>\frac12$ and $\log2\pi>\frac95$.
+Hence $m<\frac34\log\gamma$, that is $\gamma>e^{4m/3}$. Theorem~\ref{thm:cert} gives $\gamma_*>97.632$, and
+$97.632^2/2=4766.003712$.
+\end{proof}
+
+\section{The backward heat flow}\label{sec:heat}
+
+Let $\Phi(u)=\sum_{n\ge1}(2\pi^2n^4e^{9u}-3\pi n^2e^{5u})e^{-\pi n^2e^{4u}}$ and, for $t\in\R$,
+$H_t(z)=\int_0^\infty e^{tu^2}\Phi(u)\cos(zu)\,du$; then $H_0(z)=\frac18\xi(\frac12+\frac{iz}2)=\frac18\Xi(z/2)$
+\cite[§1, (1)--(4)]{rodgers-tao}, a zero of $\Xi$ at $\gamma$ is a zero of $H_0$ at $x=2\gamma$, and differentiation under
+the integral gives $\partial_tH_t=-\partial_z^2H_t$. For $a>0$ write
+\[
+ F_a(w)=\frac{H_{-a}(i\sqrt w)}{H_{-a}(0)}=\sum_{k\ge0}b_k(a)w^k,\qquad
+ J_{d,a}(X)=\sum_{k=0}^d(d)_k\,b_k(a)X^k,
+\]
+with the falling factorial $(d)_k=d(d-1)\cdots(d-k+1)$, and let $j_*(-a)\in[1,\infty]$ be the least $d$ for which
+$J_{d,a}$ has a nonreal zero ($\infty$ if there is none).
+
+\begin{proposition}\label{prop:heat}
+Assume the Riemann hypothesis. Then $\lim_{a\downarrow0}a\,j_*(-a)=\gamma_*^2/2$, the limit being $+\infty$ when all
+zeros are simple. With Theorem~\ref{thm:main} this reads
+$\lim_{a\downarrow0}a\,j_*(-a)=\frac12(\sup_{N,k}H_{N,k})^2$, and Proposition~\ref{prop:const} gives the value
+$>4766.003712$.
+\end{proposition}
+
+The proof occupies the rest of this section. Write $x_*=2\gamma_*$, so that $\gamma_*^2/2=x_*^2/8$, and let
+$m_x$ be the multiplicity of the zero $x$ of $H_0$.
+
+\paragraph{Growth and products.}
+Each term of $\Phi$ is positive for $u\ge0$, since $2\pi n^2e^{4u}\ge2\pi>3$; so $H_{-a}(iy)>0$ for real $y$, $b_k(a)>0$,
+and $F_a>0$ on $[0,\infty)$. Splitting the integral at $u=\log(R+3)$, beyond which $e^{-\pi e^{4u}}$ dominates,
+gives $\log\max_{|z|\le R}|H_t(z)|=O(R\log(R+3))$ uniformly for $t$ in compact sets. Hence $G(a,w)=H_{-a}(i\sqrt w)$ is
+entire in $(a,w)$ (it is even in $\sqrt w$), of order at most $\frac12$ in $w$, and $F_a(w)=\prod_i(1-w/w_i)$ over its
+zeros, which are $w_i=-z_i^2$ for the zeros $z_i$ of $H_{-a}$ with $\Re z_i>0$; none lies on $[0,\infty)$. At $a=0$,
+by the Riemann hypothesis, $H_0(z)=H_0(0)\prod_{x>0}(1-z^2/x^2)^{m_x}$ and, by Jensen's formula and the growth bound,
+$N_H(R)=\sum_{0<x\le R}m_x\ll R\log(R+3)$.
+
+\paragraph{The zeros of $H_{-a}$ lie in thin cones.}
+For nonreal $z$ put $L(z)=H_0'(z)/H_0(z)$ and $S(z)=\sum_{x>0}m_x(|z-x|^{-2}+|z+x|^{-2})$. The entire function
+$Q_z(v)=H_0(z+v)/(H_0(z)e^{L(z)v})$ is the product of $(1+v/(z-\xi))e^{-v/(z-\xi)}$ over the zeros $\xi=\pm x$, so
+$|1+w|^2\le e^{2\Re w+|w|^2}$ gives $|Q_z(v)|\le e^{S|v|^2/2}$; with $Q_z(0)=1$, $Q_z'(0)=0$ and Cauchy's estimate this gives
+$|Q_z(v)-1|\le8S|v|^2e^{2S|v|^2}$. Since $H_{-a}$ is the convolution of $H_0$ with the Gaussian of variance $2a$, moving the
+line of integration by $p=2aL(z)$ and completing the square gives
+$H_{-a}(z)/(H_0(z)e^{aL(z)^2})=\mathbb EQ_z(p+U)$ with $U\sim N(0,2a)$. With $A=aS(z)$, $B=a^2|L(z)|^2S(z)$ and
+$|p+U|^2\le2|p|^2+2U^2$, the Gaussian moments give, for $16A<1$,
+\[
+ \Bigl|\frac{H_{-a}(z)}{H_0(z)e^{aL(z)^2}}-1\Bigr|\le16e^{16B}\Bigl(\frac{4B}{\sqrt{1-16A}}+\frac{2A}{(1-16A)^{3/2}}\Bigr),
+\]
+which is at most $\frac7{16}$ when $A,B\le2^{-10}$; then $H_{-a}(z)\ne0$. If $|z|=r$ and $|\Im z|\ge q r$, splitting the
+zeros at $r/2$ and $2r$ and using $N_H$ gives $S(z)\ll q^{-2}\log(r+3)/(r+1)$ and $|L(z)|\ll q^{-1}\log(r+3)$. Fix
+$\eta\in(0,\frac12)$ and take $q=\eta\sqrt a$: then $A\ll\eta^{-2}\log(r+3)/(r+1)$ and
+$B\ll\eta^{-4}\log^3(r+3)/(r+1)$, uniformly in $0<a\le1$. Hence, for every $\kappa>0$ there is $R_0$ such that every
+zero of $H_{-a}$, $0<a\le1$, with $|z|\ge R_0$ and $\Re z>0$ has $|\arg z|\le\kappa\sqrt a$.
+
+\paragraph{Jensen polynomials as differential operators.}
+For a power series $F=\sum f_kw^k$, $F(D)z^d=\sum_kf_k(d)_kz^{d-k}=z^dJ_d(1/z)$ with $J_d(X)=\sum_{k\le d}(d)_kf_kX^k$; so
+$J_d$ has only real zeros if and only if $F(D)z^d$ does. By the theorem of Borcea and Br\"and\'en
+\cite[Theorem~2(b), p.~5]{bb}, a real linear operator on polynomials of degree at most $d$ preserves real-rootedness if
+its symbol $T[(z+w)^d]$ has no zero with $\Im z,\Im w>0$; this is their condition~(b), since $H_2(\R)$ there
+denotes the real stable polynomials in two variables, those with real coefficients and no zero with both
+imaginary parts positive. For $T=1+\beta D$ with $\beta>0$ the symbol is
+$(z+w)^{d-1}(z+w+d\beta)$. For $T=1+2\beta\cos\theta\,D+\beta^2D^2$, $|\theta|<\pi/2$, it is
+$(z+w)^{d-2}\bigl((z+w)^2+2d\beta\cos\theta(z+w)+d(d-1)\beta^2\bigr)$, whose quadratic factor in $z+w$ has discriminant
+$4d\beta^2(1-d\sin^2\theta)$ and hence real roots when $d\sin^2\theta\le1$ (for $d=1$ the symbol is
+$z+w+2\beta\cos\theta$). Since $\Im(z+w)>0$, these symbols do not vanish. Compositions of such operators preserve
+real-rootedness in degree at most $d$, and so do coefficientwise limits, by Hurwitz's theorem, when the limit is not
+zero.
+
+\paragraph{The interpolation and its local form.}
+Let $G(a,w)=\sum_kc_k(a)w^k$ and $\mathcal J(a,\epsilon,w)=\sum_kc_k(a)w^k\prod_{j<k}(1-j\epsilon)$. The growth bound and
+Cauchy's estimate give $|c_k(a)|\le C^kk^{-4k/3}$ for $a$ in compact sets, and the product is at most $(1+E)^kk!$ for
+$|\epsilon|\le E$; so $\mathcal J$ is entire in $(a,\epsilon,w)$, and $\mathcal J(a,1/d,w)=H_{-a}(0)J_{d,a}(w/d)$. Expanding
+$\prod_{j<k}(1-j\epsilon)=\sum_s(-\epsilon)^se_s(k)$, where $e_s(k)$, the elementary symmetric function of
+$0,\ldots,k-1$, is a polynomial in $k$ of degree $2s$ with leading coefficient $1/(2^ss!)$ (by
+$e_s(k+1)-e_s(k)=ke_{s-1}(k)$), and writing it in falling factorials of $k$, the coefficient of $\epsilon^s$ is a
+differential operator in $w$ of order at most $2s$ with principal part $(-1)^sw^{2s}D^{2s}/(2^ss!)$. In the variable $w$,
+$\partial_aG=\mathcal LG$ with $\mathcal L=-4wD^2-2D$, so the coefficient of $a^r$ in $G$ is $\mathcal L^rG(0,\cdot)/r!$,
+with principal part $(-4w)^rD^{2r}/r!$.
+
+\emph{Local form.} Let $K(a,w)=\sum_kK_k(a)w^k$ be holomorphic for $a$ near $0$ and $w$ in a disk about $0$ that
+contains $w_0$, and suppose that its interpolation $\mathcal J_K(a,\epsilon,w)=\sum_kK_k(a)w^k\prod_{j<k}(1-j\epsilon)$
+is holomorphic in $(a,\epsilon,w)$ there and entire in $\epsilon$ (for $G$ this was shown above; for a polynomial it is
+clear). Suppose that, for each $r$, the coefficient of $a^r$ in $K$
+vanishes at $w_0$ to order at least $m-2r$, with coefficient of $(w-w_0)^{m-2r}$ equal to
+$A_0(-4w_0)^r\,m!/(r!(m-2r)!)$, $A_0\ne0$. Apply the interpolation $\mathcal J_K$ (the same multipliers applied to the
+Taylor coefficients of $K$ in $w$) and substitute $a=\gamma q^2$, $\epsilon=q^2$, $w=w_0+qu$. A term
+$a^r\epsilon^s$ lowers the vanishing order by at most $2s$ and carries $q^{2r+2s}$, so no power below $q^m$ occurs, and
+at $q^m$ only the principal parts contribute:
+\[
+ \frac{\mathcal J_K(\gamma q^2,q^2,w_0+qu)}{A_0q^m}=\sum_{k}\ \sum_{r+s=k}\frac{(-4\gamma w_0)^r}{r!}\frac{(-w_0^2/2)^s}{s!}
+ D_u^{2k}u^m+O(q)=e^{c D_u^2}u^m+O(q),
+\]
+with $c=4\gamma x^2-x^4/2$ when $w_0=-x^2$, uniformly for $\gamma$ and $u$ in compact sets. The function $K=G$ satisfies
+the hypothesis at $w_0=-x^2$ with $m=m_x$, by the principal parts of $\mathcal L^r$. If $c>0$, then
+$e^{cD^2}u^m=(i\sqrt{2c})^m\mathrm{He}_m(u/(i\sqrt{2c}))$ has the nonreal roots $i\sqrt{2c}\,h$ for the nonzero roots
+$h$ of the Hermite polynomial $\mathrm{He}_m$, which exist for $m\ge2$; if $c<0$, it is
+$(\sqrt{2|c|})^m\mathrm{He}_m(u/\sqrt{2|c|})$, with $m$ simple real roots.
+
+\paragraph{Upper bound.}
+Let $x_*<\infty$ and $\gamma>x_*^2/8$, so $c>0$ at $x=x_*$, where $m\ge2$. Put $d=\lceil\gamma/a\rceil$ and $q=d^{-1/2}$; then
+$a=(ad)q^2$ with $ad\to\gamma$. By the local form and Rouch\'e's theorem, $\mathcal J(a,1/d,\cdot)$, and hence
+$J_{d,a}$, has a nonreal zero for all small $a$. So $\limsup_{a\downarrow0}a\,j_*(-a)\le\gamma$ for every
+$\gamma>x_*^2/8$.
+
+\paragraph{Lower bound.}
+Fix $0<\gamma_0<x_*^2/8$ (any $\gamma_0>0$ if $x_*=\infty$), put $\kappa=1/(4\sqrt{\gamma_0})$ and take $R_0$ from the
+cone estimate. Choose $R>R_0^2$ with no zero of $F_0$ on $|w|=R$; for small complex $a$ the circle encloses a fixed
+number $\delta$ of zeros of $F_a$, the power sums $\frac1{2\pi i}\oint w^kF_a'/F_a\,dw$ are holomorphic in $a$, and Newton's
+identities give a polynomial $P_a$ with these zeros and $P_a(0)=1$, real for real $a$. Then $F_a=P_aT_a$ with
+$T_a=\prod(1-w/w_i)$ over the zeros outside the circle. Near an enclosed endpoint $w_0=-x^2$, $P_a=UG$ with $U=1/(G(a,0)T_a)$
+holomorphic and nonvanishing; multiplying by $U=\sum_ja^jU_j$ only raises vanishing orders in the terms with
+$j\ge1$, so $P_a$ satisfies the hypothesis of the local form with $A_0=AU_0(w_0)$.
+
+\emph{The head.} Apply the local form to $P_a$ with $\gamma\in[0,\gamma_0]$. At a multiple endpoint $x\ge x_*$, so
+$c=4\gamma x^2-x^4/2<0$; at a simple endpoint the limit is $u$. Rouch\'e disks about these $\delta$ real roots, uniform in
+$\gamma$, each contain one root, which is real because the coefficients are real; they exhaust the $\delta$ roots of
+the degree-$\delta$ polynomial. So there is $d_1$ with: $d\ge d_1$ and $ad\le\gamma_0$ imply that $J_d(P_a)$ has only real
+zeros. For $d<d_1$: $P_0=\prod_i(1+\beta_iw)$ with $\beta_i>0$, and applying $1+\beta D$ to a polynomial whose nonzero roots
+are simple and negative gives one of the same kind (the equation $p'/p=-1/\beta$ has one root in each gap and one to
+the left, $p'/p$ being decreasing on each interval). So each $J_d(P_0)$, $d<d_1$, has simple real roots, which persist
+for small real $a$.
+
+\emph{The tail.} The zeros of $T_a$ are $w=-z^2$ with $|z|>R_0$; real $z$ give factors $1+\beta w$ with $\beta>0$, and
+the conjugate pairs give factors $1+2\beta\cos\theta\,w+\beta^2w^2$ with $|\theta|=2|\arg z|\le2\kappa\sqrt a$. For
+$d\le\gamma_0/a$, $d\sin^2\theta\le4\kappa^2\gamma_0=\frac14$. By the operator criterion, $T_a(D)$ preserves real-rootedness
+in degree at most $d$; applied to $P_a(D)z^d$, which has only real zeros by the head, it shows that $F_a(D)z^d$, and so
+$J_{d,a}$, has only real zeros for every $d\le\gamma_0/a$ and all small $a$. Hence
+$\liminf_{a\downarrow0}a\,j_*(-a)\ge\gamma_0$. Letting $\gamma_0\uparrow x_*^2/8$, or $\gamma_0\to\infty$ when
+$x_*=\infty$, and combining with the upper bound proves Proposition~\ref{prop:heat}.\qed
+
+\section{What remains open}
+
+All zeros are simple if and only if $\sup_{N,k}H_{N,k}=\infty$, equivalently if and only if, at an unbounded sequence
+of heights $T$ with $\Xi(T)\ne0$, the integer deficit $n(T)-\ind_+(TH_N-G_N)$ vanishes for some $N$. A proof would need
+an upper estimate for $D_{N,k}$ at unbounded heights, with the dimension $d_N\ge2n(T)$ that
+Proposition~\ref{prop:size} forces. No such estimate is known to us.
+
+\section*{Note on method}
+The mathematics of Theorems~\ref{thm:main}--\ref{thm:cert} and Propositions~\ref{prop:const}, \ref{prop:size}
+and~\ref{prop:heat} was
+produced by GPT-6 Astra (ChatGPT Pro mode), with the first computation of the certificate. Claude Opus~5.5 at effort
+high checked every proof and wrote this text, including the proofs of Lemma~\ref{lem:dense} and
+Lemma~\ref{lem:EF}, and wrote the second program for the certificate; a third, floating-point computation of all six
+rows by the same model agrees with both. A separate instance of Claude Opus~5.5 at effort high, given only the
+statements of Theorems~\ref{thm:main} and~\ref{thm:integer} and Suzuki's paper, re-proved both independently and
+then compared its proofs with ours; it found no gap, and the proof that the $b_j$ form a basis is taken from it.
+Suzuki's paper was read at the
+statements cited, Connes and Consani's appendix at the explicit formula, and the abstracts of
+\cite{alpoge-furman,lamzouri,mori,groskin,kim,platt-trudgian}; the theorem of Borcea and Br\"and\'en at its statement, and Rodgers and Tao
+at the definitions of the heat family. The same separate instance of Claude Opus~5.5 at effort high then checked
+the proof of Proposition~\ref{prop:heat} step by step, opening both of these sources at their locators, and found no
+error. No human has checked this note. Our text and programs are dedicated to the public domain under CC0~1.0;
+the permanent record of this work is WB-0009, \expandafter\url\expandafter{\recordurl}; its programs and check
+records are at \expandafter\url\expandafter{\workbenchurl} \cite{wb}.
+
+\begin{thebibliography}{99}\small
+\bibitem{alpoge} L.~Alp\"oge, announcement of the proof of the Riemann hypothesis and of the generalized Riemann
+hypothesis for Dirichlet $L$-functions, 20 November 2026, \url{https://alpo.ge/remark.pdf}.
+\bibitem{alpoge-furman} L.~Alp\"oge and R.~Furman, More than two thirds of the zeta zeros are simple and on the
+critical line, arXiv:2608.13637v2 (2026); page numbers refer to that version.
+\bibitem{arb} F.~Johansson, Arb: efficient arbitrary-precision midpoint-radius interval arithmetic, \emph{IEEE Trans.
+Comput.} 66 (2017), 1281--1292.
+\bibitem{arb-int} F.~Johansson, Numerical integration in arbitrary-precision ball arithmetic, arXiv:1802.07942
+(2018).
+\bibitem{bb} J.~Borcea and P.~Br\"and\'en, P\'olya--Schur master theorems for circular domains and their
+boundaries, \emph{Ann. of Math.} 170 (2009), 465--492; arXiv:math/0607416v6, whose page numbers are used.
+\bibitem{caceres} P.~C\'aceres, The Riemann hypothesis as a margin: a two-sided criterion verified to $2\cdot10^{29}$,
+the fourth-moment anatomy of M\"obius cancellation, and one constant seen from every side, hexagon:2610.00688v3
+(2026), abstract, \url{https://hexagonmath.org/2610.00688}.
+\bibitem{cc-weil} A.~Connes and C.~Consani, Weil positivity and trace formula, the archimedean place, Appendix
+``Explicit formula'', following E.~Bombieri, The Riemann hypothesis, in \emph{The Millennium Prize Problems}, Clay
+Math. Inst., 2006, 107--124.
+\bibitem{groskin} A.~Groskin, A finite Guinand--Weil dictionary and archimedean tail order for the truncated Weil
+quadratic form, arXiv:2607.02828v3 (2026).
+\bibitem{kim} T.~Kim, Y.~Hong, M.~Kim, S.~Choi, J.~Jang and M.~Kim, A numerical realization of Suzuki's
+Weil-quadratic-form operator, arXiv:2607.24830v3 (2026).
+\bibitem{lamzouri} Y.~Lamzouri, A new proof that more than $2/3$ of the zeros of the Riemann zeta function are simple
+and on the critical line, arXiv:2609.02882v2 (2026).
+\bibitem{lean} Lean FRO and Mathlib Initiative, Lean verification of the Riemann Hypothesis, 21 November 2026,
+\url{https://leanprover-community.github.io/blog/posts/riemann-hypothesis/}.
+\bibitem{mori} R.~Mori, Windowed Weil forms under RH alone: an $e^{-\mu^{6/5+\varepsilon}}$ lower bound and a barrier
+from distinct zeros, Zenodo 24281606, version 1 (2026).
+\bibitem{platt-trudgian} D.~Platt and T.~Trudgian, The Riemann hypothesis is true up to $3\cdot10^{12}$, \emph{Bull.
+London Math. Soc.} 53 (2021), 792--797.
+\bibitem{rodgers-tao} B.~Rodgers and T.~Tao, The de Bruijn--Newman constant is non-negative, \emph{Forum Math. Pi} 8
+(2020), e6; arXiv:1801.05914v5, §1.
+\bibitem{suzuki} M.~Suzuki, Spectral convergence associated with Weil's quadratic form, arXiv:2610.32704 (2026).
+\bibitem{wb} WB-0009. Permanent record:\newline \expandafter\url\expandafter{\recordurl};\newline programs and
+check records:\newline \expandafter\url\expandafter{\workbenchurl}.
+\end{thebibliography}
+\end{document}

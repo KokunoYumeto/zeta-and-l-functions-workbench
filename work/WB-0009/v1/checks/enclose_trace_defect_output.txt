@@ -1,0 +1,48 @@
+N 1 k 9 dim 2 prime powers 5 largest prime power 7
+S_k [3.94653014748993455304719244364e-21 +/- 4.11e-51]
+trace [3.76010789402889024149860753859e-30 +/- 2.00e-60]
+D_{N,k} [3.9465301437298266590e-21 +/- 1.84e-41]
+2/T^2k [3.9469209657407017402e-21 +/- 3.67e-41]
+strict test D < 2/T^2k certified: True
+time 0.1 s (functionals 0.1 s)
+
+N 2 k 3 dim 14 prime powers 24 largest prime power 53
+S_k [2.88347862801946559390763112190e-7 +/- 3.59e-37]
+trace [2.62956811700962600001348924187e-7 +/- 8.71e-38]
+D_{N,k} [2.5391051100983959389e-8 +/- 4.15e-28]
+2/T^2k [2.5392440397877203271e-8 +/- 3.54e-28]
+strict test D < 2/T^2k certified: True
+time 0.1 s (functionals 0.1 s)
+
+N 3 k 3 dim 46 prime powers 98 largest prime power 401
+S_k [2.88347862801946559390763112190e-7 +/- 3.59e-37]
+trace [2.82928214729284793273312068122e-7 +/- 2.47e-37]
+D_{N,k} [5.4196480726617661175e-9 +/- 4.90e-29]
+2/T^2k [5.4196589930788030314e-9 +/- 2.46e-29]
+strict test D < 2/T^2k certified: True
+time 0.3 s (functionals 0.3 s)
+
+N 4 k 2 dim 126 prime powers 465 largest prime power 2971
+S_k [7.43451985705393723297325249435e-5 +/- 1.89e-35]
+trace [7.35571655467593092760294341067e-5 +/- 1.88e-35]
+D_{N,k} [7.8803302378006305370e-7 +/- 3.10e-27]
+2/T^2k [7.8808399438920360236e-7 +/- 1.42e-28]
+strict test D < 2/T^2k certified: True
+time 0.9 s (functionals 0.7 s)
+
+N 5 k 2 dim 318 prime powers 2532 largest prime power 22013
+S_k [7.43451985705393723297325249435e-5 +/- 1.89e-35]
+trace [7.42133962131351619536536991634e-5 +/- 5.93e-36]
+D_{N,k} [1.3180235740421037608e-7 +/- 1.18e-27]
+2/T^2k [1.3180435571884268042e-7 +/- 2.96e-27]
+strict test D < 2/T^2k certified: True
+time 4.9 s (functionals 2.3 s)
+
+N 6 k 3 dim 766 prime powers 15040 largest prime power 162751
+S_k [2.88347862801946559390763112190e-7 +/- 3.59e-37]
+trace [2.88345553531030462154005773287e-7 +/- 3.73e-37]
+D_{N,k} [2.3092709160972367573e-12 +/- 3.90e-32]
+2/T^2k [2.3092815186888443092e-12 +/- 3.36e-32]
+strict test D < 2/T^2k certified: True
+time 43.6 s (functionals 15.4 s)
+
