@@ -9,7 +9,7 @@ their zeros, explicit formulas, Weil positivity and spectral realizations of the
 
 | Number | Work | State | Records |
 |---|---|---|---|
-| [WB-0009](https://github.com/KokunoYumeto/mathematics-workbenches/blob/main/works/WB-0009.md) | A finite arithmetic test for simplicity of the Riemann zeros, after Suzuki | version 1, not yet deposited | [`work/WB-0009/v1`](work/WB-0009/v1/README.md) |
+| [WB-0009](https://github.com/KokunoYumeto/mathematics-workbenches/blob/main/works/WB-0009.md) | A finite arithmetic test for simplicity of the Riemann zeros, after Suzuki | version 1, deposited as [hexagon:2611.00996](https://hexagonmath.org/2611.00996) | [`work/WB-0009/v1`](work/WB-0009/v1/README.md) |
 
 ## How this repository works
 
